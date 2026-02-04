@@ -1,9 +1,3 @@
-/**
- * MRI Brain Tumor Classification - Main JavaScript
- * Handles file upload, drag-drop, image preview, and API communication
- */
-
-// DOM Elements
 const uploadZone = document.getElementById('uploadZone');
 const fileInput = document.getElementById('fileInput');
 const uploadSection = document.getElementById('uploadSection');
@@ -162,26 +156,22 @@ function showResults(data) {
     resultsSection.classList.add('active');
     renderResults(data);
 
-    // Auto-open chatbot after showing results so user can ask questions
+    // Add contextual message to inline chat after showing results
     setTimeout(() => {
-        const chatbotWidget = document.getElementById('chatbotWidget');
-        if (chatbotWidget && !chatbotWidget.classList.contains('open')) {
-            chatbotWidget.classList.add('open');
-
-            // Add a contextual message about the result
-            const chatMessages = document.getElementById('chatMessages');
+        const chatMessages = document.getElementById('chatMessages');
+        if (chatMessages) {
             const contextMsg = document.createElement('div');
             contextMsg.className = 'chat-message chat-message--bot';
             contextMsg.innerHTML = `
                 <div class="chat-message__avatar">🤖</div>
                 <div class="chat-message__content">
-                    <p>I see you've received a prediction of <strong>${data.prediction}</strong> with ${data.confidence.toFixed(1)}% confidence. Would you like me to explain what this means or answer any questions about this result?</p>
+                    <p>Your scan shows <strong>${data.prediction}</strong> with ${data.confidence.toFixed(1)}% confidence. Feel free to ask me any questions about this result!</p>
                 </div>
             `;
             chatMessages.appendChild(contextMsg);
             chatMessages.scrollTop = chatMessages.scrollHeight;
         }
-    }, 1500); // Delay to let user see results first
+    }, 500);
 }
 
 /**
@@ -385,29 +375,13 @@ function showError(message) {
 // ============================================
 
 /**
- * Initialize chatbot
+ * Initialize chatbot (inline version in results section)
  */
 function initChatbot() {
-    const chatbotWidget = document.getElementById('chatbotWidget');
-    const chatToggle = document.getElementById('chatToggle');
-    const chatClose = document.getElementById('chatClose');
     const chatInput = document.getElementById('chatInput');
     const chatSend = document.getElementById('chatSend');
 
-    if (!chatbotWidget) return;
-
-    // Toggle chat window
-    chatToggle.addEventListener('click', () => {
-        chatbotWidget.classList.toggle('open');
-        if (chatbotWidget.classList.contains('open')) {
-            chatInput.focus();
-        }
-    });
-
-    // Close button
-    chatClose.addEventListener('click', () => {
-        chatbotWidget.classList.remove('open');
-    });
+    if (!chatInput || !chatSend) return;
 
     // Send message on button click
     chatSend.addEventListener('click', sendChatMessage);

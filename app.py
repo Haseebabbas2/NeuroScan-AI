@@ -1,13 +1,3 @@
-"""
-MRI Brain Tumor Classification - Flask Backend
-A professional web application for brain tumor detection using deep learning.
-
-Note: If you encounter model loading errors with Keras 3.x, you can:
-1. Run in DEMO_MODE (set below) to test the UI without the model
-2. Use TensorFlow 2.15 or earlier which has Keras 2.x
-3. Convert the model using convert_model.py with TensorFlow 2.15
-"""
-
 import os
 import random
 import numpy as np
@@ -22,7 +12,7 @@ import requests
 # ==========================================
 
 # OpenRouter API Configuration
-OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY', '')
+OPENROUTER_API_KEY = "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"
 OPENROUTER_MODEL = "meta-llama/llama-3.1-8b-instruct:free"  # Free, fast model
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 

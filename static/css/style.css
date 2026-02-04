@@ -1,11 +1,3 @@
-/* 
- * MRI Brain Tumor Classification - Premium Dark Theme
- * Features: Glassmorphism, Animated Gradients, Modern Typography
- */
-
-/* ============================================
-   CSS CUSTOM PROPERTIES (Design Tokens)
-   ============================================ */
 :root {
     /* Color Palette */
     --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -679,6 +671,42 @@ body {
     gap: var(--spacing-md);
     margin-top: var(--spacing-lg);
     justify-content: center;
+}
+
+/* ============================================
+   INLINE CHAT SECTION
+   ============================================ */
+.inline-chat-section {
+    margin-top: var(--spacing-xl);
+    border-top: 1px solid var(--glass-border);
+    padding-top: var(--spacing-lg);
+}
+
+.inline-chat-header {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.inline-chat-header__icon {
+    font-size: 2rem;
+}
+
+.inline-chat-header__title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin: 0;
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.inline-chat-header__subtitle {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 0;
 }
 
 .action-btn {

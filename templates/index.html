@@ -111,6 +111,35 @@
                         Save Report
                     </button>
                 </div>
+
+                <!-- Inline Chatbot -->
+                <div id="inlineChatSection" class="inline-chat-section">
+                    <div class="inline-chat-header">
+                        <span class="inline-chat-header__icon">🤖</span>
+                        <div>
+                            <h3 class="inline-chat-header__title">Ask NeuroScan AI</h3>
+                            <p class="inline-chat-header__subtitle">Get answers about your results</p>
+                        </div>
+                    </div>
+
+                    <div id="chatMessages" class="chat-messages">
+                        <div class="chat-message chat-message--bot">
+                            <div class="chat-message__avatar">🤖</div>
+                            <div class="chat-message__content">
+                                <p>I can help explain your results. Ask me anything about brain tumors, MRI imaging, or
+                                    what your diagnosis means.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="chat-input-container">
+                        <input type="text" id="chatInput" class="chat-input" placeholder="Ask about your results..."
+                            autocomplete="off">
+                        <button id="chatSend" class="chat-send">
+                            <span>➤</span>
+                        </button>
+                    </div>
+                </div>
             </section>
         </main>
 
@@ -120,58 +149,16 @@
                 🧠 NeuroScan AI — Deep Learning Brain Tumor Classification
             </p>
             <p style="margin-top: 0.5rem;">
-                <a href="https://github.com/haseebabbas" target="_blank">GitHub</a> ·
-                <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+                <a href="https://github.com/haseebabbas2" target="_blank">GitHub</a>
             </p>
-            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted);">
-                ⚠️ For educational purposes only. Not intended for medical diagnosis.
-            </p>
+
         </footer>
-    </div>
-
-    <!-- Chatbot Widget -->
-    <div id="chatbotWidget" class="chatbot-widget">
-        <!-- Chat Toggle Button -->
-        <button id="chatToggle" class="chat-toggle" title="Chat with AI Assistant">
-            <span class="chat-toggle__icon">💬</span>
-            <span class="chat-toggle__close">✕</span>
-        </button>
-
-        <!-- Chat Window -->
-        <div id="chatWindow" class="chat-window glass-card">
-            <div class="chat-header">
-                <div class="chat-header__info">
-                    <span class="chat-header__icon">🤖</span>
-                    <div>
-                        <h3 class="chat-header__title">NeuroScan Assistant</h3>
-                        <p class="chat-header__status">AI-powered medical info</p>
-                    </div>
-                </div>
-                <button id="chatClose" class="chat-header__close">✕</button>
-            </div>
-
-            <div id="chatMessages" class="chat-messages">
-                <div class="chat-message chat-message--bot">
-                    <div class="chat-message__avatar">🤖</div>
-                    <div class="chat-message__content">
-                        <p>Hello! I'm your NeuroScan AI Assistant. I can help you understand brain tumors, MRI imaging,
-                            and explain your scan results. How can I help you today?</p>
-                    </div>
-                </div>
-            </div>
-
-            <div class="chat-input-container">
-                <input type="text" id="chatInput" class="chat-input" placeholder="Ask about brain tumors, MRI scans..."
-                    autocomplete="off">
-                <button id="chatSend" class="chat-send">
-                    <span>➤</span>
-                </button>
-            </div>
-        </div>
     </div>
 
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
+
+</html>
 
 </html>
