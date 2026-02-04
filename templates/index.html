@@ -1,30 +1,34 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="AI-powered MRI Brain Tumor Classification using Deep Learning. Upload your MRI scan for instant analysis.">
+    <meta name="description"
+        content="AI-powered MRI Brain Tumor Classification using Deep Learning. Upload your MRI scan for instant analysis.">
     <meta name="keywords" content="MRI, Brain Tumor, Classification, Deep Learning, AI, Medical Imaging">
     <meta name="author" content="Haseeb Abbas">
-    
+
     <!-- Open Graph / Social Media -->
     <meta property="og:title" content="NeuroScan AI - Brain Tumor Classification">
     <meta property="og:description" content="AI-powered MRI brain tumor detection and classification">
     <meta property="og:type" content="website">
-    
+
     <title>NeuroScan AI | Brain Tumor Classification</title>
-    
+
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    
+
     <!-- Styles -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    
+
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
 </head>
+
 <body>
     <!-- Animated Background -->
     <div class="background-animation">
@@ -39,7 +43,7 @@
             <div class="header__icon">🧠</div>
             <h1 class="header__title">NeuroScan AI</h1>
             <p class="header__subtitle">
-                Advanced Brain Tumor Classification powered by Deep Learning. 
+                Advanced Brain Tumor Classification powered by Deep Learning.
                 Upload an MRI scan for instant analysis.
             </p>
         </header>
@@ -92,11 +96,11 @@
                 <div id="resultHeader" class="result-header">
                     <!-- Dynamic content -->
                 </div>
-                
+
                 <div id="probabilityGrid" class="probability-grid">
                     <!-- Dynamic content -->
                 </div>
-                
+
                 <div class="result-actions">
                     <button id="newScanBtn" class="action-btn action-btn--primary">
                         <span>🔄</span>
@@ -116,7 +120,7 @@
                 🧠 NeuroScan AI — Deep Learning Brain Tumor Classification
             </p>
             <p style="margin-top: 0.5rem;">
-                <a href="https://github.com/haseebabbas" target="_blank">GitHub</a> · 
+                <a href="https://github.com/haseebabbas" target="_blank">GitHub</a> ·
                 <a href="https://linkedin.com" target="_blank">LinkedIn</a>
             </p>
             <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted);">
@@ -125,7 +129,49 @@
         </footer>
     </div>
 
+    <!-- Chatbot Widget -->
+    <div id="chatbotWidget" class="chatbot-widget">
+        <!-- Chat Toggle Button -->
+        <button id="chatToggle" class="chat-toggle" title="Chat with AI Assistant">
+            <span class="chat-toggle__icon">💬</span>
+            <span class="chat-toggle__close">✕</span>
+        </button>
+
+        <!-- Chat Window -->
+        <div id="chatWindow" class="chat-window glass-card">
+            <div class="chat-header">
+                <div class="chat-header__info">
+                    <span class="chat-header__icon">🤖</span>
+                    <div>
+                        <h3 class="chat-header__title">NeuroScan Assistant</h3>
+                        <p class="chat-header__status">AI-powered medical info</p>
+                    </div>
+                </div>
+                <button id="chatClose" class="chat-header__close">✕</button>
+            </div>
+
+            <div id="chatMessages" class="chat-messages">
+                <div class="chat-message chat-message--bot">
+                    <div class="chat-message__avatar">🤖</div>
+                    <div class="chat-message__content">
+                        <p>Hello! I'm your NeuroScan AI Assistant. I can help you understand brain tumors, MRI imaging,
+                            and explain your scan results. How can I help you today?</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <input type="text" id="chatInput" class="chat-input" placeholder="Ask about brain tumors, MRI scans..."
+                    autocomplete="off">
+                <button id="chatSend" class="chat-send">
+                    <span>➤</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
+
 </html>

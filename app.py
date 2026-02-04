@@ -15,10 +15,16 @@ from flask import Flask, render_template, request, jsonify
 from PIL import Image
 import io
 import base64
+import requests
 
 # ==========================================
 # CONFIGURATION
 # ==========================================
+
+# OpenRouter API Configuration
+OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY', '')
+OPENROUTER_MODEL = "meta-llama/llama-3.1-8b-instruct:free"  # Free, fast model
+OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # Set to True to run without loading the actual model (for UI testing)
 DEMO_MODE = os.environ.get('DEMO_MODE', 'false').lower() == 'true'
@@ -221,13 +227,101 @@ def predict():
         return jsonify({'error': str(e)}), 500
 
 
+# Chatbot system prompt - focused on brain tumor / medical imaging
+CHATBOT_SYSTEM_PROMPT = """You are NeuroScan AI Assistant, a helpful medical AI assistant specializing in brain tumor information and MRI imaging. You provide educational information about:
+
+- Brain tumor types (Glioma, Meningioma, Pituitary tumors)
+- MRI imaging and how it's used in diagnosis
+- General information about symptoms, treatments, and prognosis
+- Explaining medical terminology in simple terms
+
+IMPORTANT GUIDELINES:
+1. Always clarify that you provide educational information only, NOT medical diagnosis
+2. Encourage users to consult qualified healthcare professionals for medical advice
+3. Be compassionate and supportive when discussing sensitive health topics
+4. If asked about unrelated topics, politely redirect to brain health and MRI topics
+5. Keep responses concise but informative (2-3 paragraphs max)
+
+You are integrated into the NeuroScan AI brain tumor classification application."""
+
+
+@app.route('/chat', methods=['POST'])
+def chat():
+    """Handle chatbot messages using OpenRouter API."""
+    try:
+        data = request.get_json()
+        user_message = data.get('message', '').strip()
+        
+        if not user_message:
+            return jsonify({'error': 'No message provided'}), 400
+        
+        # Check if API key is configured
+        if not OPENROUTER_API_KEY:
+            return jsonify({
+                'error': 'Chatbot not configured. Please set OPENROUTER_API_KEY environment variable.',
+                'response': 'I apologize, but the chatbot is not configured yet. Please add your OpenRouter API key to enable this feature.'
+            }), 200
+        
+        # Prepare the API request
+        headers = {
+            'Authorization': f'Bearer {OPENROUTER_API_KEY}',
+            'Content-Type': 'application/json',
+            'HTTP-Referer': 'https://neuroscan-ai.app',
+            'X-Title': 'NeuroScan AI'
+        }
+        
+        payload = {
+            'model': OPENROUTER_MODEL,
+            'messages': [
+                {'role': 'system', 'content': CHATBOT_SYSTEM_PROMPT},
+                {'role': 'user', 'content': user_message}
+            ],
+            'max_tokens': 500,
+            'temperature': 0.7
+        }
+        
+        # Make the API request
+        response = requests.post(
+            OPENROUTER_API_URL,
+            headers=headers,
+            json=payload,
+            timeout=30
+        )
+        
+        if response.status_code != 200:
+            return jsonify({
+                'error': f'API error: {response.status_code}',
+                'response': 'I encountered an error processing your request. Please try again.'
+            }), 200
+        
+        result = response.json()
+        assistant_message = result['choices'][0]['message']['content']
+        
+        return jsonify({
+            'success': True,
+            'response': assistant_message
+        })
+        
+    except requests.Timeout:
+        return jsonify({
+            'error': 'Request timeout',
+            'response': 'The request took too long. Please try again.'
+        }), 200
+    except Exception as e:
+        return jsonify({
+            'error': str(e),
+            'response': 'An error occurred. Please try again.'
+        }), 200
+
+
 @app.route('/health')
 def health():
     """Health check endpoint."""
     return jsonify({
         'status': 'healthy',
         'demo_mode': DEMO_MODE,
-        'model_loaded': model is not None
+        'model_loaded': model is not None,
+        'chatbot_configured': bool(OPENROUTER_API_KEY)
     })
 
 

@@ -21,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initDragDrop();
     initFileInput();
     initButtons();
+    initChatbot();
 });
 
 /**
@@ -137,7 +138,7 @@ function showPreview() {
     previewSection.classList.add('active');
     loadingSection.classList.remove('active');
     resultsSection.classList.remove('active');
-    
+
     // Animate in
     previewSection.style.animation = 'none';
     previewSection.offsetHeight; // Trigger reflow
@@ -160,6 +161,27 @@ function showResults(data) {
     loadingSection.classList.remove('active');
     resultsSection.classList.add('active');
     renderResults(data);
+
+    // Auto-open chatbot after showing results so user can ask questions
+    setTimeout(() => {
+        const chatbotWidget = document.getElementById('chatbotWidget');
+        if (chatbotWidget && !chatbotWidget.classList.contains('open')) {
+            chatbotWidget.classList.add('open');
+
+            // Add a contextual message about the result
+            const chatMessages = document.getElementById('chatMessages');
+            const contextMsg = document.createElement('div');
+            contextMsg.className = 'chat-message chat-message--bot';
+            contextMsg.innerHTML = `
+                <div class="chat-message__avatar">🤖</div>
+                <div class="chat-message__content">
+                    <p>I see you've received a prediction of <strong>${data.prediction}</strong> with ${data.confidence.toFixed(1)}% confidence. Would you like me to explain what this means or answer any questions about this result?</p>
+                </div>
+            `;
+            chatMessages.appendChild(contextMsg);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+    }, 1500); // Delay to let user see results first
 }
 
 /**
@@ -169,12 +191,12 @@ function resetToUpload() {
     currentFile = null;
     fileInput.value = '';
     previewImage.src = '';
-    
+
     uploadSection.classList.remove('hidden');
     previewSection.classList.remove('active');
     loadingSection.classList.remove('active');
     resultsSection.classList.remove('active');
-    
+
     // Animate in
     uploadSection.style.animation = 'none';
     uploadSection.offsetHeight;
@@ -240,12 +262,12 @@ function fileToBase64(file) {
 function renderResults(data) {
     const resultHeader = document.getElementById('resultHeader');
     const probabilityGrid = document.getElementById('probabilityGrid');
-    
+
     // Determine icon type based on prediction
     const isNoTumor = data.prediction === 'No Tumor';
     const iconClass = isNoTumor ? 'success' : 'warning';
     const iconEmoji = isNoTumor ? '✓' : '⚠';
-    
+
     // Update header
     resultHeader.innerHTML = `
         <div class="result-icon ${iconClass}">
@@ -256,7 +278,7 @@ function renderResults(data) {
             Confidence: <span class="confidence-value">${data.confidence.toFixed(1)}%</span>
         </p>
     `;
-    
+
     // Render probability bars
     const probabilities = data.probabilities;
     const labels = {
@@ -265,13 +287,13 @@ function renderResults(data) {
         'No Tumor': { icon: '🟢', class: 'no-tumor' },
         'Pituitary': { icon: '🔵', class: 'pituitary' }
     };
-    
+
     let probabilityHTML = '';
-    
+
     // Sort by probability (highest first)
     const sortedProbs = Object.entries(probabilities)
         .sort((a, b) => b[1] - a[1]);
-    
+
     for (const [label, value] of sortedProbs) {
         const info = labels[label] || { icon: '⚪', class: 'default' };
         probabilityHTML += `
@@ -288,9 +310,9 @@ function renderResults(data) {
             </div>
         `;
     }
-    
+
     probabilityGrid.innerHTML = probabilityHTML;
-    
+
     // Animate bars
     requestAnimationFrame(() => {
         setTimeout(() => {
@@ -312,7 +334,7 @@ function showError(message) {
         <span>⚠️</span>
         <span>${message}</span>
     `;
-    
+
     // Add styles for toast if not exists
     if (!document.getElementById('toast-styles')) {
         const styles = document.createElement('style');
@@ -320,7 +342,7 @@ function showError(message) {
         styles.textContent = `
             .toast {
                 position: fixed;
-                bottom: 20px;
+                bottom: 100px;
                 left: 50%;
                 transform: translateX(-50%);
                 padding: 16px 24px;
@@ -348,12 +370,162 @@ function showError(message) {
         `;
         document.head.appendChild(styles);
     }
-    
+
     document.body.appendChild(toast);
-    
+
     // Remove after 4 seconds
     setTimeout(() => {
         toast.style.animation = 'slideUp 0.3s ease-out reverse';
         setTimeout(() => toast.remove(), 300);
     }, 4000);
 }
+
+// ============================================
+// CHATBOT FUNCTIONALITY
+// ============================================
+
+/**
+ * Initialize chatbot
+ */
+function initChatbot() {
+    const chatbotWidget = document.getElementById('chatbotWidget');
+    const chatToggle = document.getElementById('chatToggle');
+    const chatClose = document.getElementById('chatClose');
+    const chatInput = document.getElementById('chatInput');
+    const chatSend = document.getElementById('chatSend');
+
+    if (!chatbotWidget) return;
+
+    // Toggle chat window
+    chatToggle.addEventListener('click', () => {
+        chatbotWidget.classList.toggle('open');
+        if (chatbotWidget.classList.contains('open')) {
+            chatInput.focus();
+        }
+    });
+
+    // Close button
+    chatClose.addEventListener('click', () => {
+        chatbotWidget.classList.remove('open');
+    });
+
+    // Send message on button click
+    chatSend.addEventListener('click', sendChatMessage);
+
+    // Send message on Enter key
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            sendChatMessage();
+        }
+    });
+}
+
+/**
+ * Send chat message
+ */
+async function sendChatMessage() {
+    const chatInput = document.getElementById('chatInput');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatSend = document.getElementById('chatSend');
+
+    const message = chatInput.value.trim();
+    if (!message) return;
+
+    // Clear input
+    chatInput.value = '';
+    chatSend.disabled = true;
+
+    // Add user message
+    addChatMessage(message, 'user');
+
+    // Add typing indicator
+    const typingIndicator = addTypingIndicator();
+
+    // Scroll to bottom
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    try {
+        const response = await fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ message })
+        });
+
+        const data = await response.json();
+
+        // Remove typing indicator
+        typingIndicator.remove();
+
+        // Add bot response
+        addChatMessage(data.response || data.error || 'Sorry, I could not process your request.', 'bot');
+
+    } catch (error) {
+        console.error('Chat error:', error);
+        typingIndicator.remove();
+        addChatMessage('Sorry, there was an error connecting to the server.', 'bot');
+    } finally {
+        chatSend.disabled = false;
+        chatInput.focus();
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+}
+
+/**
+ * Add message to chat
+ */
+function addChatMessage(text, sender) {
+    const chatMessages = document.getElementById('chatMessages');
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message chat-message--${sender}`;
+
+    const avatar = sender === 'user' ? '👤' : '🤖';
+
+    messageDiv.innerHTML = `
+        <div class="chat-message__avatar">${avatar}</div>
+        <div class="chat-message__content">
+            <p>${escapeHtml(text)}</p>
+        </div>
+    `;
+
+    chatMessages.appendChild(messageDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    return messageDiv;
+}
+
+/**
+ * Add typing indicator
+ */
+function addTypingIndicator() {
+    const chatMessages = document.getElementById('chatMessages');
+
+    const typingDiv = document.createElement('div');
+    typingDiv.className = 'chat-message chat-message--bot chat-message--typing';
+    typingDiv.innerHTML = `
+        <div class="chat-message__avatar">🤖</div>
+        <div class="chat-message__content">
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+            <span class="typing-dot"></span>
+        </div>
+    `;
+
+    chatMessages.appendChild(typingDiv);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    return typingDiv;
+}
+
+/**
+ * Escape HTML to prevent XSS
+ */
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+

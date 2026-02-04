@@ -58,7 +58,7 @@ Mri/
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/haseebabbas/NeuroScan-AI.git
+   git clone https://github.com/Haseebabbas2/NeuroScan-AI.git
    cd NeuroScan-AI
    ```
 
@@ -134,11 +134,10 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## 📬 Contact
 
-- **GitHub**: [@haseebabbas](https://github.com/haseebabbas)
-- **LinkedIn**: [Haseeb Abbas](https://linkedin.com/in/haseebabbas)
+- **GitHub**: [@haseebabbas](https://github.com/Haseebabbas2)
 
 ---
 
 <div align="center">
-  Made with ❤️ and 🧠 by Haseeb Abbas
+  Made with by Haseeb Abbas
 </div>

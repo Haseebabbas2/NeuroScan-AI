@@ -1,22 +1,3 @@
-"""
-Model Conversion Utility for Legacy Keras Models
-
-This script converts a TensorFlow 2.x/Keras 2.x model (.h5) to be compatible
-with Keras 3.x by fixing known incompatibilities.
-
-Usage:
-    python convert_model.py model.h5 model_converted.h5
-
-Requirements:
-    - TensorFlow 2.15 or earlier (with Keras 2.x)
-    
-If you don't have TensorFlow 2.15, you can create a conda environment:
-    conda create -n tf2 python=3.10
-    conda activate tf2
-    pip install tensorflow==2.15.0
-    python convert_model.py model.h5 model_converted.keras
-"""
-
 import sys
 import os
 
