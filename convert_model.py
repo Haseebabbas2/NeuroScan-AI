@@ -1,0 +1,70 @@
+"""
+Model Conversion Utility for Legacy Keras Models
+
+This script converts a TensorFlow 2.x/Keras 2.x model (.h5) to be compatible
+with Keras 3.x by fixing known incompatibilities.
+
+Usage:
+    python convert_model.py model.h5 model_converted.h5
+
+Requirements:
+    - TensorFlow 2.15 or earlier (with Keras 2.x)
+    
+If you don't have TensorFlow 2.15, you can create a conda environment:
+    conda create -n tf2 python=3.10
+    conda activate tf2
+    pip install tensorflow==2.15.0
+    python convert_model.py model.h5 model_converted.keras
+"""
+
+import sys
+import os
+
+def convert_model(input_path, output_path):
+    """Convert a legacy H5 model to Keras 3.x compatible format."""
+    print(f"Converting model: {input_path} -> {output_path}")
+    
+    # Set environment to use older Keras
+    os.environ['TF_USE_LEGACY_KERAS'] = '1'
+    
+    import tensorflow as tf
+    print(f"TensorFlow version: {tf.__version__}")
+    
+    # Load the model with legacy format
+    print("Loading model...")
+    model = tf.keras.models.load_model(input_path, compile=False)
+    print(f"Model loaded: {model.name}")
+    print(f"Input shape: {model.input_shape}")
+    print(f"Output shape: {model.output_shape}")
+    
+    # Save in new format
+    print(f"Saving to: {output_path}")
+    if output_path.endswith('.keras'):
+        model.save(output_path)
+    else:
+        model.save(output_path, save_format='h5')
+    
+    print("Conversion complete!")
+    return True
+
+
+if __name__ == '__main__':
+    if len(sys.argv) < 3:
+        print("Usage: python convert_model.py <input.h5> <output.keras>")
+        print("\nThis requires TensorFlow 2.15 or earlier (with Keras 2.x)")
+        sys.exit(1)
+    
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
+    
+    if not os.path.exists(input_file):
+        print(f"Error: Input file not found: {input_file}")
+        sys.exit(1)
+    
+    try:
+        convert_model(input_file, output_file)
+    except Exception as e:
+        print(f"Conversion failed: {e}")
+        print("\nMake sure you're using TensorFlow 2.15 or earlier.")
+        print("You can install it with: pip install tensorflow==2.15.0")
+        sys.exit(1)

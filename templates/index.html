@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered MRI Brain Tumor Classification using Deep Learning. Upload your MRI scan for instant analysis.">
+    <meta name="keywords" content="MRI, Brain Tumor, Classification, Deep Learning, AI, Medical Imaging">
+    <meta name="author" content="Haseeb Abbas">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="NeuroScan AI - Brain Tumor Classification">
+    <meta property="og:description" content="AI-powered MRI brain tumor detection and classification">
+    <meta property="og:type" content="website">
+    
+    <title>NeuroScan AI | Brain Tumor Classification</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧠</text></svg>">
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="background-animation">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header__icon">🧠</div>
+            <h1 class="header__title">NeuroScan AI</h1>
+            <p class="header__subtitle">
+                Advanced Brain Tumor Classification powered by Deep Learning. 
+                Upload an MRI scan for instant analysis.
+            </p>
+        </header>
+
+        <main class="main-content">
+            <!-- Upload Section -->
+            <section id="uploadSection" class="upload-section glass-card">
+                <div id="uploadZone" class="upload-zone">
+                    <span class="upload-zone__icon">📤</span>
+                    <h3 class="upload-zone__title">Drop your MRI scan here</h3>
+                    <p class="upload-zone__text">or click to browse files</p>
+                    <button type="button" class="upload-zone__button">
+                        <span>📁</span>
+                        Select Image
+                    </button>
+                    <input type="file" id="fileInput" accept="image/*">
+                    <div class="upload-zone__formats">
+                        <span class="format-badge">JPG</span>
+                        <span class="format-badge">PNG</span>
+                        <span class="format-badge">WEBP</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Preview Section -->
+            <section id="previewSection" class="preview-section glass-card">
+                <div class="preview-container">
+                    <img id="previewImage" class="preview-image" src="" alt="MRI Preview">
+                    <div class="preview-overlay">
+                        <button id="clearBtn" class="preview-btn" title="Remove image">✕</button>
+                    </div>
+                </div>
+                <button id="analyzeBtn" class="analyze-btn">
+                    <span>🔬</span>
+                    Analyze MRI Scan
+                </button>
+            </section>
+
+            <!-- Loading Section -->
+            <section id="loadingSection" class="loading-section glass-card">
+                <div class="loading-spinner"></div>
+                <p class="loading-text">Analyzing your MRI scan<span class="loading-dots"></span></p>
+                <p style="color: var(--text-muted); margin-top: 1rem; font-size: 0.9rem;">
+                    Our AI is examining the image for potential abnormalities
+                </p>
+            </section>
+
+            <!-- Results Section -->
+            <section id="resultsSection" class="results-section glass-card">
+                <div id="resultHeader" class="result-header">
+                    <!-- Dynamic content -->
+                </div>
+                
+                <div id="probabilityGrid" class="probability-grid">
+                    <!-- Dynamic content -->
+                </div>
+                
+                <div class="result-actions">
+                    <button id="newScanBtn" class="action-btn action-btn--primary">
+                        <span>🔄</span>
+                        New Scan
+                    </button>
+                    <button onclick="window.print()" class="action-btn action-btn--secondary">
+                        <span>📄</span>
+                        Save Report
+                    </button>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>
+                🧠 NeuroScan AI — Deep Learning Brain Tumor Classification
+            </p>
+            <p style="margin-top: 0.5rem;">
+                <a href="https://github.com/haseebabbas" target="_blank">GitHub</a> · 
+                <a href="https://linkedin.com" target="_blank">LinkedIn</a>
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.8rem; color: var(--text-muted);">
+                ⚠️ For educational purposes only. Not intended for medical diagnosis.
+            </p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
