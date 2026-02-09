@@ -2,23 +2,20 @@ import sys
 import os
 
 def convert_model(input_path, output_path):
-    """Convert a legacy H5 model to Keras 3.x compatible format."""
+
     print(f"Converting model: {input_path} -> {output_path}")
     
-    # Set environment to use older Keras
     os.environ['TF_USE_LEGACY_KERAS'] = '1'
     
     import tensorflow as tf
     print(f"TensorFlow version: {tf.__version__}")
     
-    # Load the model with legacy format
     print("Loading model...")
     model = tf.keras.models.load_model(input_path, compile=False)
     print(f"Model loaded: {model.name}")
     print(f"Input shape: {model.input_shape}")
     print(f"Output shape: {model.output_shape}")
     
-    # Save in new format
     print(f"Saving to: {output_path}")
     if output_path.endswith('.keras'):
         model.save(output_path)
