@@ -57,7 +57,6 @@ model = None
 
 
 def load_model():
-    """Load the trained model with legacy Keras compatibility."""
     global model
     
     if DEMO_MODE:
@@ -67,13 +66,11 @@ def load_model():
     if model is None:
         print("Loading model...")
         
-        # Try loading converted model first
         model_path = CONVERTED_MODEL_PATH if os.path.exists(CONVERTED_MODEL_PATH) else MODEL_PATH
         print(f"Using model: {model_path}")
         
         try:
-            # Use tf_keras (legacy Keras 2.x) for loading old format models
-            import tf_keras
+           import tf_keras
             model = tf_keras.models.load_model(model_path, compile=False)
             print("Model loaded successfully using tf_keras!")
         except ImportError:
@@ -101,11 +98,8 @@ def load_model():
 
 
 def preprocess_image(image_data):
-    """Preprocess the uploaded image for model prediction."""
-    # Open image from bytes
     image = Image.open(io.BytesIO(image_data))
     
-    # Convert to RGB if necessary
     if image.mode != 'RGB':
         image = image.convert('RGB')
     
