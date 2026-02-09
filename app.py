@@ -48,11 +48,14 @@ else:
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
+# Model path
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model.h5')
 CONVERTED_MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model_converted.keras')
 
+# Class labels for brain tumor classification
 CLASS_LABELS = ['Glioma', 'Meningioma', 'No Tumor', 'Pituitary']
 
+# Global model variable
 model = None
 
 
