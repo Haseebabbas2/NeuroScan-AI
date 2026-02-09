@@ -1,3 +1,4 @@
+
 import os
 import random
 import numpy as np
@@ -13,7 +14,7 @@ import requests
 
 # OpenRouter API Configuration
 OPENROUTER_API_KEY = "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"
-OPENROUTER_MODEL = "meta-llama/llama-3.1-8b-instruct:free"  # Free, fast model
+OPENROUTER_MODEL = "nvidia/nemotron-nano-9b-v2:free"  # Working free model
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 # Set to True to run without loading the actual model (for UI testing)
@@ -279,9 +280,12 @@ def chat():
         )
         
         if response.status_code != 200:
+            error_detail = response.json() if response.text else {}
+            error_msg = error_detail.get('error', {}).get('message', 'Unknown error')
+            print(f"OpenRouter API error: {response.status_code} - {error_msg}")
             return jsonify({
                 'error': f'API error: {response.status_code}',
-                'response': 'I encountered an error processing your request. Please try again.'
+                'response': f'API Error: {error_msg}. Please try again later.'
             }), 200
         
         result = response.json()
@@ -333,7 +337,7 @@ if __name__ == '__main__':
             DEMO_MODE = True
     
     print("\n" + "="*60)
-    print("  Server ready! Open http://localhost:5000 in your browser")
+    print("  Server ready! Open http://localhost:5001 in your browser")
     print("="*60 + "\n")
     
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5001)

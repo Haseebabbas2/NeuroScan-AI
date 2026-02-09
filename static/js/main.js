@@ -458,10 +458,13 @@ function addChatMessage(text, sender) {
 
     const avatar = sender === 'user' ? '👤' : '🤖';
 
+    // For bot messages, parse markdown; for user messages, escape HTML
+    const formattedText = sender === 'bot' ? parseMarkdown(text) : escapeHtml(text);
+
     messageDiv.innerHTML = `
         <div class="chat-message__avatar">${avatar}</div>
         <div class="chat-message__content">
-            <p>${escapeHtml(text)}</p>
+            <p>${formattedText}</p>
         </div>
     `;
 
@@ -469,6 +472,28 @@ function addChatMessage(text, sender) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
     return messageDiv;
+}
+
+/**
+ * Parse markdown to HTML for bot messages
+ */
+function parseMarkdown(text) {
+    // First escape HTML to prevent XSS
+    let html = escapeHtml(text);
+
+    // Convert **bold** to <strong>
+    html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+
+    // Convert *italic* to <em> (but not if it's part of **)
+    html = html.replace(/(?<!\*)\*([^*]+)\*(?!\*)/g, '<em>$1</em>');
+
+    // Convert `code` to <code>
+    html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+    // Convert line breaks
+    html = html.replace(/\n/g, '<br>');
+
+    return html;
 }
 
 /**

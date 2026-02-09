@@ -135,7 +135,6 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## 📬 Contact
 
 - **GitHub**: [@haseebabbas](https://github.com/Haseebabbas2)
-
 ---
 
 <div align="center">
