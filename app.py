@@ -103,24 +103,18 @@ def preprocess_image(image_data):
     if image.mode != 'RGB':
         image = image.convert('RGB')
     
-    # Resize to model input size (299x299 based on model.input_shape)
     image = image.resize((299, 299))
     
-    # Convert to numpy array and normalize
     img_array = np.array(image) / 255.0
     
-    # Add batch dimension
     img_array = np.expand_dims(img_array, axis=0)
     
     return img_array
 
 
 def demo_predict():
-    """Generate a simulated prediction for demo mode."""
-    # Generate random probabilities
     probs = np.random.dirichlet(np.ones(4) * 2)  # More realistic distribution
     
-    # Sometimes make one class more dominant for realistic results
     if random.random() > 0.3:
         dominant_idx = random.randint(0, 3)
         probs[dominant_idx] += 0.5
