@@ -105,16 +105,21 @@ def preprocess_image(image_data):
     
     image = image.resize((299, 299))
     
+    # Convert to numpy array and normalize
     img_array = np.array(image) / 255.0
     
+    # Add batch dimension
     img_array = np.expand_dims(img_array, axis=0)
     
     return img_array
 
 
 def demo_predict():
+    """Generate a simulated prediction for demo mode."""
+    # Generate random probabilities
     probs = np.random.dirichlet(np.ones(4) * 2)  # More realistic distribution
     
+    # Sometimes make one class more dominant for realistic results
     if random.random() > 0.3:
         dominant_idx = random.randint(0, 3)
         probs[dominant_idx] += 0.5
@@ -134,13 +139,17 @@ def demo_predict():
 
 @app.route('/')
 def index():
+    """Render the main page."""
     return render_template('index.html')
 
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    """Handle image upload and return prediction."""
     try:
+        # Check if image is in request
         if 'image' not in request.files:
+            # Check for base64 image data
             data = request.get_json()
             if data and 'image' in data:
                 # Remove data URL prefix if present
