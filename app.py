@@ -23,6 +23,7 @@ OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
 DEMO_MODE = os.environ.get('DEMO_MODE', 'false').lower() == 'true'
 
+# TensorFlow import with error handling
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 if not DEMO_MODE:
@@ -30,6 +31,7 @@ if not DEMO_MODE:
         import tensorflow as tf
         TF_AVAILABLE = True
         
+        # Configure GPU memory growth to avoid OOM errors
         gpus = tf.config.experimental.list_physical_devices('GPU')
         if gpus:
             try:
