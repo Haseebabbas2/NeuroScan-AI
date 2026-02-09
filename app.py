@@ -21,10 +21,8 @@ OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY', '')
 OPENROUTER_MODEL = "nvidia/nemotron-nano-9b-v2:free"  # Working free model
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
-# Set to True to run without loading the actual model (for UI testing)
 DEMO_MODE = os.environ.get('DEMO_MODE', 'false').lower() == 'true'
 
-# TensorFlow import with error handling
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 
 if not DEMO_MODE:
@@ -32,7 +30,6 @@ if not DEMO_MODE:
         import tensorflow as tf
         TF_AVAILABLE = True
         
-        # Configure GPU memory growth to avoid OOM errors
         gpus = tf.config.experimental.list_physical_devices('GPU')
         if gpus:
             try:
@@ -51,14 +48,11 @@ else:
 app = Flask(__name__)
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB max file size
 
-# Model path
 MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model.h5')
 CONVERTED_MODEL_PATH = os.path.join(os.path.dirname(__file__), 'model_converted.keras')
 
-# Class labels for brain tumor classification
 CLASS_LABELS = ['Glioma', 'Meningioma', 'No Tumor', 'Pituitary']
 
-# Global model variable
 model = None
 
 
