@@ -7,13 +7,17 @@ from PIL import Image
 import io
 import base64
 import requests
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # ==========================================
 # CONFIGURATION
 # ==========================================
 
 # OpenRouter API Configuration
-OPENROUTER_API_KEY = "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"
+OPENROUTER_API_KEY = os.environ.get('OPENROUTER_API_KEY', '')
 OPENROUTER_MODEL = "nvidia/nemotron-nano-9b-v2:free"  # Working free model
 OPENROUTER_API_URL = "https://openrouter.ai/api/v1/chat/completions"
 
