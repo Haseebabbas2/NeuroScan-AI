@@ -134,17 +134,13 @@ def demo_predict():
 
 @app.route('/')
 def index():
-    """Render the main page."""
     return render_template('index.html')
 
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    """Handle image upload and return prediction."""
     try:
-        # Check if image is in request
         if 'image' not in request.files:
-            # Check for base64 image data
             data = request.get_json()
             if data and 'image' in data:
                 # Remove data URL prefix if present
